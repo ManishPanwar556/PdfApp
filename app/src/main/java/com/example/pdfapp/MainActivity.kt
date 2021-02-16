@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    lateinit var list: List<Bitmap>
+    private lateinit var list: List<Bitmap>
     private fun showPdfFromUri(uri: Uri?) {
         if (uri != null) {
             Toast.makeText(this, "${uri.path}", Toast.LENGTH_SHORT).show()
@@ -83,15 +83,16 @@ class MainActivity : AppCompatActivity() {
                 viewPagerAdapter = MyViewPagerAdapter(list)
                 val bookFlipPageTransformer2 = BookFlipPageTransformer2()
 //                bookFlipPageTransformer2.setEnableScale(true)
-//                bookFlipPageTransformer2.scaleAmountPercent = 10f
+////                bookFlipPageTransformer2.scaleAmountPercent = 10f
+                viewPager2.adapter=viewPagerAdapter
                 viewPager2.setPageTransformer(bookFlipPageTransformer2)
             }
         }
     }
 
     //
-    suspend fun convertPdfToBitmap(uri: Uri?): ArrayList<Bitmap> {
-        val list = arrayListOf<Bitmap>()
+    private suspend fun convertPdfToBitmap(uri: Uri?): ArrayList<Bitmap> {
+        val bitmapList = arrayListOf<Bitmap>()
         if (uri != null) {
             val input =
                 contentResolver.openFileDescriptor(uri, "r")
@@ -101,22 +102,23 @@ class MainActivity : AppCompatActivity() {
             Log.e(TAG, "$pageCount")
             while (count < pageCount) {
                 val page = renderer.openPage(count)
-                val displayMetrics = DisplayMetrics()
-                val width = displayMetrics.widthPixels / displayMetrics.density
+                val displayMetrics =resources.displayMetrics
+                val width = displayMetrics.widthPixels
+                val height=displayMetrics.heightPixels
                 val bitmap = Bitmap.createBitmap(
-                    120,
-                    120,
+                    width,
+                    height,
                     Bitmap.Config.ARGB_8888
                 )
                 page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
-                list.add(bitmap)
+                bitmapList.add(bitmap)
                 page.close()
 
                 count++
             }
             renderer.close()
         }
-        return list
+        return bitmapList
     }
 
     override fun onRequestPermissionsResult(

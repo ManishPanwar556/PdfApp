@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.davemorrissey.labs.subscaleview.ImageSource
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 
 
 class MyViewPagerAdapter(private val list:List<Bitmap>):RecyclerView.Adapter<MyViewPagerAdapter.MyViewHolder>() {
@@ -19,8 +21,8 @@ class MyViewPagerAdapter(private val list:List<Bitmap>):RecyclerView.Adapter<MyV
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val pdfImage=holder.view.findViewById<ImageView>(R.id.pdfImage)
-        Glide.with(holder.view).load(list[position]).into(pdfImage)
+        val pdfImage=holder.view.findViewById<SubsamplingScaleImageView>(R.id.pdfImage)
+        pdfImage.setImage(ImageSource.bitmap(list[position]))
     }
 
     override fun getItemCount()=list.size
