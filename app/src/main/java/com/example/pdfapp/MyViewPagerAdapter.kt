@@ -21,8 +21,8 @@ class MyViewPagerAdapter(private val list:List<Bitmap>):RecyclerView.Adapter<MyV
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val pdfImage=holder.view.findViewById<SubsamplingScaleImageView>(R.id.pdfImage)
-        pdfImage.setImage(ImageSource.bitmap(list[position]))
+        val pdfImage=holder.view.findViewById<ImageView>(R.id.pdfImage)
+        pdfImage.setImageBitmap(list[position])
     }
 
     override fun getItemCount()=list.size

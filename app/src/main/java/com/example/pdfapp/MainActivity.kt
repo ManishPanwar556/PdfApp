@@ -33,7 +33,7 @@ const val TAG = "MAINACTIVITY"
 class MainActivity : AppCompatActivity() {
     lateinit var viewPager2: ViewPager2
     lateinit var binding: ActivityMainBinding
-    lateinit var viewPagerAdapter: MyViewPagerAdapter
+    private lateinit var list: List<Bitmap>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private lateinit var list: List<Bitmap>
+
     private fun showPdfFromUri(uri: Uri?) {
         if (uri != null) {
             Toast.makeText(this, "${uri.path}", Toast.LENGTH_SHORT).show()
@@ -79,12 +79,11 @@ class MainActivity : AppCompatActivity() {
                 withContext(Dispatchers.IO) {
                     list = convertPdfToBitmap(uri)
                 }
-                Log.e(TAG,"${list.size}")
-                viewPagerAdapter = MyViewPagerAdapter(list)
+                Log.e(TAG, "${list.size}")
                 val bookFlipPageTransformer2 = BookFlipPageTransformer2()
 //                bookFlipPageTransformer2.setEnableScale(true)
 ////                bookFlipPageTransformer2.scaleAmountPercent = 10f
-                viewPager2.adapter=viewPagerAdapter
+                viewPager2.adapter = MyViewPagerAdapter(list)
                 viewPager2.setPageTransformer(bookFlipPageTransformer2)
             }
         }
@@ -102,9 +101,9 @@ class MainActivity : AppCompatActivity() {
             Log.e(TAG, "$pageCount")
             while (count < pageCount) {
                 val page = renderer.openPage(count)
-                val displayMetrics =resources.displayMetrics
+                val displayMetrics = resources.displayMetrics
                 val width = displayMetrics.widthPixels
-                val height=displayMetrics.heightPixels
+                val height = displayMetrics.heightPixels
                 val bitmap = Bitmap.createBitmap(
                     width,
                     height,
